@@ -4,8 +4,7 @@ import * as XLSX from 'xlsx'
 import { Transaction } from './Transaction'
 
 function App() {
-  const [category, setCategory] = useState({ food: 0, travel: 0, creditCardBill: 0, investment: 0, misc: 0, refreshments: 0 })
-
+  const [category, setCategory] = useState({ 'food': 0, 'travel': 0, 'creditCardBill': 0, 'investment': 0, 'misc': 0, 'refreshments': 0 })
 
   const handleFileUpload = (e: any) => {
     const file = e.target.files[0]
@@ -25,32 +24,32 @@ function App() {
     transactions.forEach((transaction) => {
       if (transaction.withdrawals) {
         let particulars: string = transaction.particulars
-
         if (particulars.includes('Zomato') || particulars.includes('SWIGGY')) {
           category.food += parseInt(transaction.withdrawals.replace(',', ''))
           setCategory(category)
         }
         else if (particulars.includes('OLACABS')) {
-          category.travel += parseInt(transaction.withdrawals.replace(',', ''))
-          setCategory(category)
+          category.travel += convertExpenditure(transaction.withdrawals)
         }
         else if (particulars.includes('CRED')) {
-          category.creditCardBill += parseInt(transaction.withdrawals.replace(',', ''))
-          setCategory(category)
+          category.creditCardBill += convertExpenditure(transaction.withdrawals)
         }
         else if (particulars.includes('GROWW')) {
-          category.investment += parseInt(transaction.withdrawals.replace(',', ''))
-          setCategory(category)
+          category.investment += convertExpenditure(transaction.withdrawals)
         }
         else if (particulars.includes('zepto')) {
-          category.refreshments += parseInt(transaction.withdrawals.replace(',', ''))
+          category.refreshments += convertExpenditure(transaction.withdrawals)
         }
         else {
-          category.misc += parseInt(transaction.withdrawals.replace(',', ''))
+          category.misc += convertExpenditure(transaction.withdrawals)
         }
       }
     })
-    console.log(category)
+    setCategory({ ...category })
+  }
+
+  const convertExpenditure = (withdrawals: string) => {
+    return parseInt(withdrawals.replace(',', ''))
   }
 
   return (
@@ -58,7 +57,11 @@ function App() {
       <input type="file" accept=".xls" onChange={(e) => handleFileUpload(e)} />
 
       <h1>Here's what you've spent:</h1>
-
+      <ul className='category'>
+        {Object.entries(category).map(([categoryName, value]) => (
+          <li key={categoryName}>{categoryName}: {value}</li>
+        ))}
+      </ul>
     </>
   )
 }
