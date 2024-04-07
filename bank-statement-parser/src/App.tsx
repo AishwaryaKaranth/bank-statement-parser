@@ -4,7 +4,8 @@ import * as XLSX from 'xlsx'
 import { Transaction } from './Transaction'
 
 function App() {
-  const [category, setCategory] = useState({ 'food': 0, 'travel': 0, 'creditCardBill': 0, 'investment': 0, 'misc': 0, 'refreshments': 0 })
+  const [category, setCategory] = useState({ 'food': 0, 'travel': 0, 'creditCardBill': 0, 'investment': 0, 'misc': 0, 'refreshments': 0, 'rent': 0 })
+  const [totalAmount, setTotalAmount] = useState(0)
 
   const handleFileUpload = (e: any) => {
     const file = e.target.files[0]
@@ -40,11 +41,15 @@ function App() {
         else if (particulars.includes('zepto')) {
           category.refreshments += convertExpenditure(transaction.withdrawals)
         }
+        else if (particulars.includes('Savithri')) {
+          category.rent += convertExpenditure(transaction.withdrawals)
+        }
         else {
           category.misc += convertExpenditure(transaction.withdrawals)
         }
       }
     })
+    setTotalAmount(category.creditCardBill + category.food + category.investment + category.misc + category.refreshments + category.travel + category.rent)
     setCategory({ ...category })
   }
 
@@ -62,6 +67,7 @@ function App() {
           <li key={categoryName}>{categoryName}: {value}</li>
         ))}
       </ul>
+      <h4>Total: {totalAmount}</h4>
     </>
   )
 }
