@@ -37,7 +37,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Detect package manager
         id: detect-package-manager
-        run: |
+        run: cd bank-statement-parser/bank-statement-parser |
           if [ -f "bank-statement-parser/bank-statement-parser/package.json" ]; then
             echo "manager=npm" >> $GITHUB_OUTPUT
             echo "command=ci" >> $GITHUB_OUTPUT
